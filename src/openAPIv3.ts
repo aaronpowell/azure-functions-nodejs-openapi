@@ -15,10 +15,11 @@ function mapOpenApi(
 }
 
 const generateOpenApiSpec =
-  (doc: Omit<OpenAPIV3.Document, "paths" | "swagger" | "basePath">) =>
+  (doc: Omit<OpenAPIV3.Document, "paths" | "openapi">) =>
   (context: Context, req: HttpRequest) => {
+    const body: OpenAPIV3.Document = { ...doc, openapi: "3.0.0", paths };
     context.res = {
-      body: { ...doc, swagger: "3.0", basePath: "/api", paths },
+      body,
     };
     context.done();
   };
