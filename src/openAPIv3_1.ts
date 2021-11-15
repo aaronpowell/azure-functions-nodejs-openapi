@@ -15,13 +15,10 @@ function mapOpenApi(
 }
 
 const generateOpenApiSpec =
-  (doc: Omit<OpenAPIV3_1.Document, "paths" | "openapi">) =>
-  (context: Context, req: HttpRequest) => {
+  (doc: Omit<OpenAPIV3_1.Document, "paths" | "openapi">): AzureFunction =>
+  (context: Context, req: HttpRequest): Promise<OpenAPIV3_1.Document> => {
     const body: OpenAPIV3_1.Document = { ...doc, openapi: "3.0.3", paths };
-    context.res = {
-      body,
-    };
-    context.done();
+    return Promise.resolve(body);
   };
 
 export { mapOpenApi, generateOpenApiSpec };
