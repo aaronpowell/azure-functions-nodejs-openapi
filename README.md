@@ -1,4 +1,4 @@
-# OpenAPI for Azure Functions
+# OpenAPI for Azure Functions [![Publish a release](https://github.com/aaronpowell/azure-functions-nodejs-openapi/actions/workflows/release.yaml/badge.svg)](https://github.com/aaronpowell/azure-functions-nodejs-openapi/actions/workflows/release.yaml) ![npm version](https://img.shields.io/npm/v/@aaronpowell/azure-functions-nodejs-openapi)
 
 This is an extension for [Azure Functions](https://azure.microsoft.com/services/functions/?WT.mc_id=javascript-48109-aapowell#overview) that gives support for generating [OpenAPI](https://www.openapis.org/) spec files from annotated Azure Functions. To make this easier, the extension is written in TypeScript and provided TypeScript typings for the objects needing ot be created.
 
