@@ -73,7 +73,7 @@ export default generateOpenApi3_1Spec({
 });
 ```
 
-**Note: You'll need to edit the `function.json` to have the `out` parameter named `$return`, as the generator function will return, not assign to `context`.**
+**Note: You'll need to edit the `function.json` to have the `out` parameter named `res`, as the generator function will assign it to that on `context`.**
 
 ## License
 

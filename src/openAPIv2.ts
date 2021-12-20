@@ -1,4 +1,4 @@
-import { AzureFunction } from "@azure/functions";
+import { AzureFunction, Context } from "@azure/functions";
 import { OpenAPIV2 } from "openapi-types";
 
 const paths: {
@@ -18,14 +18,15 @@ const generateOpenApiSpec =
   (
     doc: Omit<OpenAPIV2.Document, "paths" | "swagger" | "basePath">
   ): AzureFunction =>
-  async () => {
+  (context: Context) => {
     const body: OpenAPIV2.Document = {
       ...doc,
       swagger: "2.0",
       basePath: "/api",
       paths,
     };
-    return body;
+    context.res = { body };
+    context.done();
   };
 
 export { mapOpenApi, generateOpenApiSpec };
