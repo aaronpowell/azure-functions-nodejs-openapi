@@ -1,0 +1,80 @@
+# OpenAPI for Azure Functions
+
+This is an extension for [Azure Functions](https://azure.microsoft.com/services/functions/?WT.mc_id=javascript-48109-aapowell#overview) that gives support for generating [OpenAPI](https://www.openapis.org/) spec files from annotated Azure Functions. To make this easier, the extension is written in TypeScript and provided TypeScript typings for the objects needing ot be created.
+
+The plugin supports the three major releases of OpenAPI/Swagger, v2, v3 and v3.1, via specific imports, with the default export being OpenAPI 3.1.
+
+The plugin was inspired by [the .NET extension](https://github.com/Azure/azure-functions-openapi-extension).
+
+## Usage
+
+### Step 1 - Annotate an Azure Function
+
+Import the desired version helper to annotate an Azure Function with the metadata for OpenAPI.
+
+```ts
+import { AzureFunction, Context, HttpRequest } from "@azure/functions";
+import { mapOpenApi3_1 } from "@aaronpowell/azure-functions-nodejs-openapi";
+
+const httpTrigger: AzureFunction = async function (
+  context: Context,
+  req: HttpRequest
+): Promise<void> {
+  context.log("HTTP trigger function processed a request.");
+  const name = req.query.name;
+  const responseMessage = name
+    ? "Hello, " + name + ". This HTTP triggered function executed successfully."
+    : "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response.";
+
+  context.res = {
+    body: responseMessage,
+  };
+};
+
+export default mapOpenApi3_1(httpTrigger, "/get-message", {
+  get: {
+    parameters: [
+      {
+        name: "name",
+        in: "query",
+        required: true,
+        schema: {
+          type: "string",
+        },
+      },
+    ],
+    responses: {
+      "200": {
+        description: "Gets a message from the Function",
+        content: {
+          "application/json": {
+            example:
+              "Hello Aaron. This is a HTTP triggered function executed successfully.",
+          },
+        },
+      },
+    },
+  },
+});
+```
+
+### Step 2 - Create the OpenAPI endpoint
+
+Create a new HTTP Trigger Azure Functions and name it how you want it exposed to consumers (eg `swagger`), and import the function to generate the spec file:
+
+```ts
+import { generateOpenApi3_1Spec } from "azure-functions-nodejs-openapi";
+
+export default generateOpenApi3_1Spec({
+  info: {
+    title: "Azure Function Swagger v3.1 demo",
+    version: "1.0.0",
+  },
+});
+```
+
+**Note: You'll need to edit the `function.json` to have the `out` parameter named `$return`, as the generator function will return, not assign to `context`.**
+
+## License
+
+MIT
