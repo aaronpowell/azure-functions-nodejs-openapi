@@ -12,3 +12,5 @@ export {
   generateOpenApiSpec as generateOpenApi3_1Spec,
   mapOpenApi as mapOpenApi3_1,
 } from "./openAPIv3_1";
+
+export default "./openAPIv3_1";
