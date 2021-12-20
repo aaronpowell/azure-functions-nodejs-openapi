@@ -1,0 +1,115 @@
+name: Publish a release
+
+on:
+  push:
+    tags:
+      - v* #version is cut
+
+env:
+  NODE_VERSION: 12
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment:
+      name: build
+      url: ${{ steps.create_release.outputs.html_url }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: true
+          prerelease: false
+      - uses: actions/setup-node@v1
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - run: |
+          npm ci
+          npm run lint
+          npm run build
+          npm pack
+      - name: Upload
+        uses: actions/upload-artifact@v2
+        with:
+          name: package
+          path: "*.tgz"
+      - run: echo "tag=${GITHUB_REF##*/v}" >> $GITHUB_ENV
+      - name: Upload package to release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
+          asset_path: "aaronpowell-azure-functions-nodejs-openapi-${{ env.tag }}.tgz"
+          asset_name: "aaronpowell-azure-functions-nodejs-openapi-${{ env.tag }}.tgz"
+          asset_content_type: application/zip
+      - run: echo ${{ steps.create_release.outputs.id }} >> release.txt
+      - name: Upload
+        uses: actions/upload-artifact@v2
+        with:
+          name: release_id
+          path: release.txt
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: release
+    steps:
+      - name: Download package
+        uses: actions/download-artifact@v2
+        with:
+          name: release_id
+      - run: echo "release_id=$(cat release.txt)" >> $GITHUB_ENV
+      - name: Publish release
+        uses: actions/github-script@v3
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            github.repos.updateRelease({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              release_id: process.env.release_id,
+              draft: false
+            })
+  publish-npm:
+    needs: release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Download package
+        uses: actions/download-artifact@v2
+        with:
+          name: package
+      - uses: actions/setup-node@v1
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          registry-url: https://registry.npmjs.org/
+      - run: npm publish $(ls *.tgz) --access public
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
+
+  publish-gpr:
+    needs: release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Download package
+        uses: actions/download-artifact@v2
+        with:
+          name: package
+      - uses: actions/setup-node@v1
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          registry-url: https://npm.pkg.github.com/
+          scope: "@aaronpowell"
+      - run: echo "registry=https://npm.pkg.github.com/@aaronpowell" >> .npmrc
+      - run: npm publish $(ls *.tgz) --access public
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}

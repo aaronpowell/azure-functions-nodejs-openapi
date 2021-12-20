@@ -1,4 +1,4 @@
-import { AzureFunction, Context, HttpRequest } from "@azure/functions";
+import { AzureFunction } from "@azure/functions";
 import { OpenAPIV2 } from "openapi-types";
 
 const paths: {
@@ -15,12 +15,17 @@ function mapOpenApi(
 }
 
 const generateOpenApiSpec =
-  (doc: Omit<OpenAPIV2.Document, "paths" | "swagger" | "basePath">) =>
-  (context: Context, req: HttpRequest) => {
-    context.res = {
-      body: { ...doc, swagger: "2.0", basePath: "/api", paths },
+  (
+    doc: Omit<OpenAPIV2.Document, "paths" | "swagger" | "basePath">
+  ): AzureFunction =>
+  async () => {
+    const body: OpenAPIV2.Document = {
+      ...doc,
+      swagger: "2.0",
+      basePath: "/api",
+      paths,
     };
-    context.done();
+    return body;
   };
 
 export { mapOpenApi, generateOpenApiSpec };
