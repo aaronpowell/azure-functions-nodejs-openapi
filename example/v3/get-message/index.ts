@@ -1,5 +1,5 @@
 import { AzureFunction, Context, HttpRequest } from "@azure/functions";
-import { mapOpenApi3 } from "azure-functions-nodejs-openapi";
+import { mapOpenApi3 } from "@aaronpowell/azure-functions-nodejs-openapi";
 
 const httpTrigger: AzureFunction = async function (
   context: Context,
