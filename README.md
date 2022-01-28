@@ -63,7 +63,7 @@ export default mapOpenApi3_1(httpTrigger, "/get-message", {
 Create a new HTTP Trigger Azure Functions and name it how you want it exposed to consumers (eg `swagger`), and import the function to generate the spec file:
 
 ```ts
-import { generateOpenApi3_1Spec } from "azure-functions-nodejs-openapi";
+import { generateOpenApi3_1Spec } from "@aaronpowell/azure-functions-nodejs-openapi";
 
 export default generateOpenApi3_1Spec({
   info: {
@@ -74,6 +74,18 @@ export default generateOpenApi3_1Spec({
 ```
 
 **Note: You'll need to edit the `function.json` to have the `out` parameter named `res`, as the generator function will assign it to that on `context`.**
+
+## Examples
+
+You find examples for the different OpenAPI version in the folder `example`. They are running on Azure Functions Runtime version 3.x.
+If you want to run them on version 4.x, adjust the extension bundle reference in the `host.json` to:
+
+```json
+"extensionBundle": {
+    "id": "Microsoft.Azure.Functions.ExtensionBundle",
+    "version": "[2.*, 3.0.0)"
+  }
+```
 
 ## License
 
