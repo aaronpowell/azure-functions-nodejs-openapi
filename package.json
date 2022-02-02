@@ -9,7 +9,7 @@
     "watch": "tsc -w",
     "lint": "eslint src/**/*.ts",
     "lint:fix": "npm run lint -- --fix",
-    "clean": "rm -r dist",
+    "clean": "rimraf dist",
     "start": "cd example/trivia-game && npm start",
     "prestart": "npm run build",
     "prepare": "husky install"
@@ -45,6 +45,7 @@
     "eslint-plugin-prettier": "^4.0.0",
     "husky": "^7.0.4",
     "prettier": "^2.5.1",
+    "rimraf": "^3.0.2",
     "typescript": "^4.5.4"
   },
   "dependencies": {
