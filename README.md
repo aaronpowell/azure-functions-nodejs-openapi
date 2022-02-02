@@ -63,7 +63,7 @@ export default mapOpenApi3_1(httpTrigger, "/get-message", {
 Create a new HTTP Trigger Azure Functions and name it how you want it exposed to consumers (eg `swagger`), and import the function to generate the spec file:
 
 ```ts
-import { generateOpenApi3_1Spec } from "azure-functions-nodejs-openapi";
+import { generateOpenApi3_1Spec } from @aaronpowell/azure-functions-nodejs-openapi";
 
 export default generateOpenApi3_1Spec({
   info: {

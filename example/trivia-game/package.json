@@ -17,6 +17,6 @@
     "typescript": "^3.3.3"
   },
   "dependencies": {
-    "azure-functions-nodejs-openapi": "file:../.."
+    "@aaronpowell/azure-functions-nodejs-openapi": "file:../.."
   }
 }

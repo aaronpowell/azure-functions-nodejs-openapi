@@ -9,7 +9,7 @@
     "watch": "tsc -w",
     "lint": "eslint src/**/*.ts",
     "lint:fix": "npm run lint -- --fix",
-    "clean": "rm -rf dist",
+    "clean": "rm -r dist",
     "start": "cd example/trivia-game && npm start",
     "prestart": "npm run build",
     "prepare": "husky install"

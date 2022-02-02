@@ -1,4 +1,4 @@
-import { generateOpenApi2Spec } from "azure-functions-nodejs-openapi";
+import { generateOpenApi2Spec } from "@aaronpowell/azure-functions-nodejs-openapi";
 
 export default generateOpenApi2Spec({
   info: {
