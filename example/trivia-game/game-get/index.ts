@@ -1,20 +1,23 @@
 import { AzureFunction, Context, HttpRequest } from "@azure/functions";
 import { mapOpenApi3_1 } from "@aaronpowell/azure-functions-nodejs-openapi";
+import { games } from "../data";
 
 const httpTrigger: AzureFunction = async function (
   context: Context,
   req: HttpRequest
 ): Promise<void> {
-  context.log("HTTP trigger function processed a request.");
-  const name = req.query.name || (req.body && req.body.name);
-  const responseMessage = name
-    ? "Hello, " + name + ". This HTTP triggered function executed successfully."
-    : "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response.";
+  const id: string = req.params.id;
+  const game = games.find((g) => g.id === id);
 
-  context.res = {
-    // status: 200, /* Defaults to 200 */
-    body: responseMessage,
-  };
+  if (!game) {
+    context.res = {
+      status: 404,
+    };
+  } else {
+    context.res = {
+      body: game,
+    };
+  }
 };
 
 export default mapOpenApi3_1(httpTrigger, "/game/{gameId}", {
@@ -45,6 +48,9 @@ export default mapOpenApi3_1(httpTrigger, "/game/{gameId}", {
             },
           },
         },
+      },
+      "404": {
+        description: "Unable to find a game with that id",
       },
     },
   },
