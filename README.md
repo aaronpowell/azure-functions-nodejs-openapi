@@ -87,6 +87,33 @@ If you want to run them on version 4.x, adjust the extension bundle reference in
   }
 ```
 
+## Scaffolding Function descriptions
+
+_The following is very much a work in progress._
+
+To get started in generating the OpenAPI annotations for Functions, there's a CLI tool provided as part of this package, `openapi-func`.
+
+This will look at the `function.json` for a Function and give some of the boilerplate required to get you started.
+
+```bash
+cd example/trivia-app
+npx openapi-func endpoint -f ./game-get
+```
+
+This will output the following for you to add to your Function:
+
+```
+Here's a starting point for your OpenAPI enabled Function
+
+Change the default export from the Azure Function to the following:
+
+export default mapOpenApi3_1(httpTrigger, "/game-get", {
+  get: {
+    responses: { '200': { description: 'The response from the Azure Function' } }
+  }
+})
+```
+
 ## License
 
 MIT
