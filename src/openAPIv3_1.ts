@@ -17,7 +17,7 @@ function mapOpenApi(
 const generateOpenApiSpec =
   (doc: Omit<OpenAPIV3_1.Document, "paths" | "openapi">): AzureFunction =>
   (context: Context) => {
-    const body: OpenAPIV3_1.Document = { ...doc, openapi: "3.0.3", paths };
+    const body: OpenAPIV3_1.Document = { ...doc, openapi: "3.1.0", paths };
     context.res = { body };
     context.done();
   };
