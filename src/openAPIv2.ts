@@ -10,7 +10,7 @@ function mapOpenApi(
   route: string,
   spec: OpenAPIV2.PathItemObject
 ) {
-  paths[route] = spec;
+  paths[route] = { ...paths[route], ...spec };
   return func;
 }
 

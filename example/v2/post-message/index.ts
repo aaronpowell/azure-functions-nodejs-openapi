@@ -5,10 +5,11 @@ const httpTrigger: AzureFunction = async function (
   context: Context,
   req: HttpRequest
 ): Promise<void> {
-  const name = req.query.name;
+  context.log("HTTP trigger function processed a request.");
+  const name = req.body && req.body.name;
   const responseMessage = name
     ? "Hello, " + name + ". This HTTP triggered function executed successfully."
-    : "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response.";
+    : "This HTTP triggered function executed successfully. Pass a name in the request body for a personalized response.";
 
   context.res = {
     // status: 200, /* Defaults to 200 */
@@ -17,12 +18,17 @@ const httpTrigger: AzureFunction = async function (
 };
 
 export default mapOpenApi2(httpTrigger, "/message", {
-  get: {
+  post: {
+    produces: ["application/json"],
+    consumes: ["application/json"],
     parameters: [
       {
-        name: "name",
-        in: "query",
-        type: "string",
+        name: "body",
+        in: "body",
+        type: "object",
+        schema: {
+          $ref: "#/definitions/Message",
+        },
       },
     ],
     responses: {

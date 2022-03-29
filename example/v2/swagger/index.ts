@@ -7,4 +7,14 @@ export default generateOpenApi2Spec({
   },
   host: "localhost:7071",
   schemes: ["http"],
+  definitions: {
+    Message: {
+      type: "object",
+      properties: {
+        name: {
+          type: "string",
+        },
+      },
+    },
+  },
 });
