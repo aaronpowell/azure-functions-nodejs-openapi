@@ -58,6 +58,26 @@ export default mapOpenApi3_1(httpTrigger, "/get-message", {
 });
 ```
 
+For the case where a function contains multiple endpoints, you can pass an array into the ```routes``` and ```specs``` parameters.
+
+```
+export default mapOpenApi3_1(httpTrigger, ["/get-message-1", "/get-message-2"], [
+  {
+    get: {
+      ...
+    },
+  },
+  {
+    get: {
+      ...
+    },
+    post: {
+      ...
+    },
+  }
+]);
+```
+
 ### Step 2 - Create the OpenAPI endpoint
 
 Create a new HTTP Trigger Azure Functions and name it how you want it exposed to consumers (eg `swagger`), and import the function to generate the spec file:
