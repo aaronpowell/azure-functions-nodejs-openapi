@@ -1,6 +1,6 @@
 {
   "name": "@aaronpowell/azure-functions-nodejs-openapi",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Support for generating OpenAPI spec files for Azure Functions",
   "main": "./build/index.js",
   "bin": {
