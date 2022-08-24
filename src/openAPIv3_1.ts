@@ -7,10 +7,18 @@ const paths: {
 
 function mapOpenApi(
   func: AzureFunction,
-  route: string,
-  spec: OpenAPIV3_1.PathItemObject
+  routes: string | string[],
+  specs: OpenAPIV3_1.PathItemObject | OpenAPIV3_1.PathItemObject[]
 ) {
-  paths[route] = { ...paths[route], ...spec };
+
+  if (Array.isArray(routes) && Array.isArray(specs)) {
+    routes.map((route: string, index: number) => {
+      paths[route] = { ...paths[route], ...specs[index] };
+    })
+  } else if (!Array.isArray(routes) && !Array.isArray(specs)) {
+    paths[routes] = { ...paths[routes], ...specs };
+  }
+  
   return func;
 }
 
